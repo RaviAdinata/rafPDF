@@ -58,7 +58,8 @@ Proyek ini membutuhkan **Ghostscript** untuk fitur kompresi PDF yang maksimal.
 - **Keamanan**: Auto-cleanup file setiap 30 menit.
 
 ## 📸 Tangkapan Layar
-*(Tambahkan screenshot tampilan web Anda di sini)*
+<img width="1920" height="932" alt="image" src="https://github.com/user-attachments/assets/ef7ad2d2-1cf7-4a92-ac69-61ac973a23ee" />
+
 
 ## 🤝 Kontribusi
 
