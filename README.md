@@ -1,4 +1,7 @@
 # 📄 RafPDF Studio
+## 📸 Tangkapan Layar
+<img width="1920" height="932" alt="image" src="https://github.com/user-attachments/assets/ef7ad2d2-1cf7-4a92-ac69-61ac973a23ee" />
+
 
 **RafPDF Studio** adalah alat manipulasi PDF berbasis web yang berjalan **100% secara lokal di komputer Anda**. Tidak ada file yang diunggah ke cloud. Privasi dan keamanan dokumen Anda adalah prioritas utama.
 
@@ -56,10 +59,6 @@ Proyek ini membutuhkan **Ghostscript** untuk fitur kompresi PDF yang maksimal.
 - **Pemrosesan Gambar**: Pillow (PIL)
 - **Frontend**: HTML5, CSS3 (Vanilla), JavaScript (Vanilla)
 - **Keamanan**: Auto-cleanup file setiap 30 menit.
-
-## 📸 Tangkapan Layar
-<img width="1920" height="932" alt="image" src="https://github.com/user-attachments/assets/ef7ad2d2-1cf7-4a92-ac69-61ac973a23ee" />
-
 
 ## 🤝 Kontribusi
 
