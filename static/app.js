@@ -518,19 +518,6 @@ if (searchInput) {
 }
 
 // ==========================================
-// 11. EFEK PREMIUM: SPOTLIGHT KURSOR PADA KARTU
-// ==========================================
-document.querySelectorAll('.tool-card').forEach(card => {
-  card.addEventListener('mousemove', e => {
-    const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    card.style.setProperty('--mouse-x', `${x}px`);
-    card.style.setProperty('--mouse-y', `${y}px`);
-  });
-});
-
-// ==========================================
 // 12. UTILITIES: GLOBAL PROGRESS BAR & FILE SIZE CHECK
 // ==========================================
 const globalProgress = document.getElementById("global-progress");
@@ -573,3 +560,16 @@ window.fetch = async function(...args) {
     throw error;
   }
 };
+
+// ==========================================
+// 11. EFEK PREMIUM: SPOTLIGHT KURSOR PADA KARTU
+// ==========================================
+document.querySelectorAll('.tool-card').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    card.style.setProperty('--mouse-x', `${x}px`);
+    card.style.setProperty('--mouse-y', `${y}px`);
+  });
+});
