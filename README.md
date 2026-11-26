@@ -4,6 +4,8 @@
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Python](https://img.shields.io/badge/python-3.10%2B-blue)
+<img width="1920" height="932" alt="image" src="https://github.com/user-attachments/assets/3b7766c4-d65d-4ad1-b015-409775827005" />
+
 
 ## ✨ Fitur Utama
 
