@@ -529,3 +529,47 @@ document.querySelectorAll('.tool-card').forEach(card => {
     card.style.setProperty('--mouse-y', `${y}px`);
   });
 });
+
+// ==========================================
+// 12. UTILITIES: GLOBAL PROGRESS BAR & FILE SIZE CHECK
+// ==========================================
+const globalProgress = document.getElementById("global-progress");
+
+function startProgress() {
+  globalProgress.style.width = "20%";
+  setTimeout(() => { globalProgress.style.width = "70%"; }, 200);
+}
+function finishProgress() {
+  globalProgress.style.width = "100%";
+  setTimeout(() => { globalProgress.style.width = "0%"; }, 500);
+}
+
+// Fungsi pembantu untuk memvalidasi ukuran file
+function isValidSize(file) {
+  if (file.size > 50 * 1024 * 1024) { // 50 MB
+    showToast("Ukuran file terlalu besar (Maksimal 50 MB).", true);
+    return false;
+  }
+  return true;
+}
+
+// Tambahkan progress bar ke semua proses upload
+const originalFetch = window.fetch;
+window.fetch = async function(...args) {
+  // Hanya tampilkan progress untuk request POST ke endpoint tertentu
+  if (args[1] && args[1].method === "POST") {
+    startProgress();
+  }
+  try {
+    const response = await originalFetch.apply(this, args);
+    if (args[1] && args[1].method === "POST") {
+      finishProgress();
+    }
+    return response;
+  } catch (error) {
+    if (args[1] && args[1].method === "POST") {
+      finishProgress();
+    }
+    throw error;
+  }
+};

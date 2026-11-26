@@ -209,3 +209,37 @@ main { flex: 1; overflow-y: auto; position: relative; display: flex; justify-con
 .btn-outline:hover { background: rgba(255,255,255,0.05); }
 
 @media (max-width: 800px) { .layout { grid-template-columns: 1fr; } .home-hero h1 { font-size: 2rem; } }
+
+/* --- ANIMASI DRAG & DROP PREMIUM --- */
+.drop-area, .simple-box {
+  position: relative;
+  overflow: hidden;
+}
+
+.drop-area.dragover, .simple-box.dragover {
+  border-color: var(--primary);
+  background: rgba(59, 130, 246, 0.05);
+  transform: scale(1.02);
+  box-shadow: 0 0 30px rgba(59, 130, 246, 0.15);
+}
+
+.drop-area.dragover::after, .simple-box.dragover::after {
+  content: "Lepaskan File di Sini";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  z-index: 10;
+  animation: pulse-bg 1.5s infinite;
+}
+
+@keyframes pulse-bg {
+  0% { background: rgba(59, 130, 246, 0.1); }
+  50% { background: rgba(59, 130, 246, 0.3); }
+  100% { background: rgba(59, 130, 246, 0.1); }
+}
