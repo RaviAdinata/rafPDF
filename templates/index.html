@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RafPDF Studio</title>
+  <link rel="stylesheet" href="/static/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- TOAST NOTIFICATION -->
+  <div id="toast" class="toast"></div>
+
+  <header>
+    <div class="logo" onclick="navTo('home')" style="cursor:pointer">Raf<span>PDF</span></div>
+    <div class="status-badge"><span class="dot"></span> Local Server Active</div>
+  </header>
+
+  <main>
+    <!-- HOME PAGE -->
+    <section id="page-home" class="page active">
+      <div class="home-hero">
+        <h1>Alat PDF Cepat & Privat</h1>
+        <p>Proses file Anda sepenuhnya di komputer ini.</p>
+      </div>
+      <div class="tool-grid">
+        <div class="tool-card" onclick="navTo('compress')"><div class="icon-wrap bg-blue"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg></div><h3>Kompres PDF</h3><p>Perkecil ukuran file tanpa mengurangi kualitas teks.</p></div>
+        <div class="tool-card" onclick="navTo('merge')"><div class="icon-wrap bg-yellow"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v14c0 1.1.9 2 2 2h3"></path><path d="M16 3h3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-3"></path><line x1="12" y1="20" x2="12" y2="4"></line></svg></div><h3>Gabungkan PDF</h3><p>Satukan beberapa dokumen menjadi satu file.</p></div>
+        <div class="tool-card" onclick="navTo('jpg')"><div class="icon-wrap bg-green"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg></div><h3>JPG ke PDF</h3><p>Ubah foto atau gambar menjadi PDF yang rapi.</p></div>
+        <div class="tool-card" onclick="navTo('delete')"><div class="icon-wrap bg-red"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></div><h3>Hapus Halaman</h3><p>Buang halaman PDF yang tidak diinginkan.</p></div>
+      </div>
+    </section>
+
+    <!-- COMPRESS PAGE -->
+    <section id="page-compress" class="page">
+      <button class="btn-back" onclick="navTo('home')">← Kembali</button>
+      <div id="view-upload-c" class="drop-area">
+        <input type="file" id="file-c" accept=".pdf" hidden />
+        <div class="icon-wrap bg-blue" style="margin: 0 auto 20px;"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg></div>
+        <h2>Unggah Dokumen PDF</h2><p>Tarik file ke sini atau pilih dari komputer.</p>
+        <button type="button" class="btn-primary" id="btn-trigger-c">Pilih File</button>
+      </div>
+      <div id="view-work-c" class="layout" style="display:none;">
+        <div class="file-card">
+          <div class="file-header"><span id="ui-filename-c">Memuat...</span></div>
+          <div class="file-preview"><div id="img-loading-c" class="spinner" style="display:none;"></div><img id="img-preview-c" src="" style="display:none;" onload="this.style.display='block'; document.getElementById('img-loading-c').style.display='none';" /></div>
+          <div class="file-actions">
+            <button id="btn-rotate" class="action-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2v6h-6"></path><path d="M3 12a9 9 0 1 0 2.2-5.9L21 8"></path></svg> Putar</button>
+            <button id="btn-watermark" class="action-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"></path></svg> Watermark</button>
+          </div>
+        </div>
+        <div class="control-section">
+          <h2>Pengaturan Ekspor</h2><p class="desc">Pilih tingkat kompresi akhir.</p>
+          <div class="radio-list">
+            <label class="radio-item"><input type="radio" name="level" value="extreme"><div class="radio-box"><div class="radio-title">Ekstrem</div><div class="radio-desc">Ukuran terkecil (< 500 KB).</div></div></label>
+            <label class="radio-item selected"><input type="radio" name="level" value="recommended" checked><div class="radio-box"><div class="radio-title">Direkomendasikan</div><div class="radio-desc">Keseimbangan optimal.</div></div></label>
+            <label class="radio-item"><input type="radio" name="level" value="low"><div class="radio-box"><div class="radio-title">Rendah</div><div class="radio-desc">Kualitas maksimal.</div></div></label>
+          </div>
+          <button id="btn-process-c" class="btn-primary block">Proses Dokumen</button>
+          <div id="loading-c" class="loading" style="display:none;"><div class="spinner"></div> Memproses...</div>
+          <div id="result-c" class="result" style="display:none;"><h3>Berhasil!</h3><p>Ukuran: <strong id="res-size-c"></strong> (Hemat <span id="res-ratio-c"></span>)</p><a id="btn-download-c" href="#" class="btn-primary block success">Unduh PDF</a></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MERGE PAGE -->
+    <section id="page-merge" class="page">
+      <button class="btn-back" onclick="navTo('home')">← Kembali</button>
+      <div style="text-align: center; margin-bottom: 20px;"><h2>Gabungkan PDF</h2><p class="desc">Pilih beberapa file PDF.</p></div>
+      <div id="view-upload-merge" class="simple-box"><input type="file" id="files-merge" accept=".pdf" multiple hidden /><button class="btn-primary" id="btn-trigger-merge">Pilih File PDF</button></div>
+      <div id="view-work-merge" style="display:none; width:100%;"><div id="grid-merge" class="merge-grid"></div><div style="text-align: center; margin-top: 30px;"><button id="btn-do-merge" class="btn-primary block" style="max-width: 300px; margin: 0 auto;">Gabungkan & Simpan</button></div><div id="loading-merge" class="loading" style="display:none;"><div class="spinner"></div> Menggabungkan...</div><div id="result-merge" class="result" style="display:none; max-width: 400px; margin: 20px auto 0;"><h3>Berhasil Digabung!</h3><a id="btn-download-merge" href="#" class="btn-primary block success">Unduh PDF Gabungan</a></div></div>
+    </section>
+
+    <!-- JPG PAGE -->
+    <section id="page-jpg" class="page">
+      <button class="btn-back" onclick="navTo('home')">← Kembali</button>
+      <div style="text-align: center; margin-bottom: 20px;"><h2>JPG ke PDF</h2><p class="desc">Ubah gambar menjadi PDF.</p></div>
+      <div id="view-upload-jpg" class="simple-box"><input type="file" id="files-jpg" accept="image/*" multiple hidden /><button class="btn-primary" id="btn-trigger-jpg">Pilih Gambar</button></div>
+      <div id="view-work-jpg" style="display:none; width:100%;"><div id="grid-jpg" class="merge-grid"></div><div style="text-align: center; margin-top: 30px;"><button id="btn-do-jpg" class="btn-primary block" style="max-width: 300px; margin: 0 auto;">Konversi ke PDF</button></div><div id="loading-jpg" class="loading" style="display:none;"><div class="spinner"></div> Mengonversi...</div><div id="result-jpg" class="result" style="display:none; max-width: 400px; margin: 20px auto 0;"><h3>Berhasil!</h3><a id="btn-download-jpg" href="#" class="btn-primary block success">Unduh PDF</a></div></div>
+    </section>
+
+    <!-- DELETE PAGE -->
+    <section id="page-delete" class="page">
+      <button class="btn-back" onclick="navTo('home')">← Kembali</button>
+      <div style="text-align: center; margin-bottom: 20px;"><h2>Hapus Halaman</h2><p class="desc">Klik halaman yang ingin dihapus (berubah jadi merah).</p></div>
+      <div id="view-upload-delete" class="simple-box"><input type="file" id="file-delete" accept=".pdf" hidden /><button class="btn-primary" id="btn-trigger-delete">Pilih File PDF</button></div>
+      <div id="view-work-delete" style="display:none; width:100%;"><div id="grid-delete" class="merge-grid"></div><div style="text-align: center; margin-top: 30px;"><button id="btn-do-delete" class="btn-primary block" style="max-width: 300px; margin: 0 auto;">Simpan Perubahan</button></div><div id="loading-delete" class="loading" style="display:none;"><div class="spinner"></div> Menghapus...</div><div id="result-delete" class="result" style="display:none; max-width: 400px; margin: 20px auto 0;"><h3>Berhasil Dihapus!</h3><a id="btn-download-delete" href="#" class="btn-primary block success">Unduh PDF</a></div></div>
+    </section>
+  </main>
+
+  <!-- MODAL WATERMARK -->
+  <div id="modal-wm" class="modal">
+    <div class="modal-box"><h3>Tambah Watermark</h3><p>Teks akan dicetak transparan.</p><input type="text" id="wm-text" value="HANYA UNTUK PENDAFTARAN"><div class="modal-btns"><button id="wm-cancel" class="btn-outline">Batal</button><button id="wm-save" class="btn-primary">Terapkan</button></div></div>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
