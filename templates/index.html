@@ -22,12 +22,20 @@
       <div class="home-hero">
         <h1>Alat PDF Cepat & Privat</h1>
         <p>Proses file Anda sepenuhnya di komputer ini.</p>
+        <div class="search-container">
+          <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          <input type="text" id="search-tools" placeholder="Cari alat (misal: kompres, putar, gabung)..." />
+        </div>
       </div>
-      <div class="tool-grid">
+      <div class="tool-grid" id="tool-grid">
         <div class="tool-card" onclick="navTo('compress')"><div class="icon-wrap bg-blue"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg></div><h3>Kompres PDF</h3><p>Perkecil ukuran file tanpa mengurangi kualitas teks.</p></div>
         <div class="tool-card" onclick="navTo('merge')"><div class="icon-wrap bg-yellow"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v14c0 1.1.9 2 2 2h3"></path><path d="M16 3h3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-3"></path><line x1="12" y1="20" x2="12" y2="4"></line></svg></div><h3>Gabungkan PDF</h3><p>Satukan beberapa dokumen menjadi satu file.</p></div>
         <div class="tool-card" onclick="navTo('jpg')"><div class="icon-wrap bg-green"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg></div><h3>JPG ke PDF</h3><p>Ubah foto atau gambar menjadi PDF yang rapi.</p></div>
         <div class="tool-card" onclick="navTo('delete')"><div class="icon-wrap bg-red"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></div><h3>Hapus Halaman</h3><p>Buang halaman PDF yang tidak diinginkan.</p></div>
+        <div class="tool-card" onclick="navTo('numbers')"><div class="icon-wrap bg-teal"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9h16M4 15h16M10 3L8 21M16 3l-2 18"/></svg></div><h3>Nomor Halaman</h3><p>Tambahkan penomoran otomatis.</p></div>
+        <div class="tool-card" onclick="navTo('protect')"><div class="icon-wrap bg-orange"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></div><h3>Kunci PDF</h3><p>Amankan file dengan password.</p></div>
+        <div class="tool-card" onclick="navTo('split')"><div class="icon-wrap bg-pink"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg></div><h3>Pisahkan PDF</h3><p>Ambil halaman tertentu saja.</p></div>
+        <div class="tool-card" onclick="navTo('unlock')"><div class="icon-wrap bg-cyan"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 9.9-1"></path></svg></div><h3>Buka Kunci</h3><p>Hapus password dari PDF.</p></div>
       </div>
     </section>
 
@@ -86,6 +94,106 @@
       <div id="view-upload-delete" class="simple-box"><input type="file" id="file-delete" accept=".pdf" hidden /><button class="btn-primary" id="btn-trigger-delete">Pilih File PDF</button></div>
       <div id="view-work-delete" style="display:none; width:100%;"><div id="grid-delete" class="merge-grid"></div><div style="text-align: center; margin-top: 30px;"><button id="btn-do-delete" class="btn-primary block" style="max-width: 300px; margin: 0 auto;">Simpan Perubahan</button></div><div id="loading-delete" class="loading" style="display:none;"><div class="spinner"></div> Menghapus...</div><div id="result-delete" class="result" style="display:none; max-width: 400px; margin: 20px auto 0;"><h3>Berhasil Dihapus!</h3><a id="btn-download-delete" href="#" class="btn-primary block success">Unduh PDF</a></div></div>
     </section>
+  
+    <!-- NUMBERS PAGE -->
+    <section id="page-numbers" class="page">
+      <button class="btn-back" onclick="navTo('home')">← Kembali</button>
+      <div style="text-align: center; margin-bottom: 20px;"><h2>Tambah Nomor Halaman</h2><p class="desc">Tambahkan penomoran otomatis pada bagian bawah halaman.</p></div>
+      
+      <div id="view-upload-num" class="simple-box"><input type="file" id="file-num" accept=".pdf" hidden /><button class="btn-primary" id="btn-trigger-num">Pilih File PDF</button></div>
+      
+      <div id="view-work-num" class="layout" style="display:none;">
+        <!-- PREVIEW KIRI -->
+        <div class="file-card">
+          <div class="file-header"><span id="num-filename">Memuat...</span></div>
+          <div class="file-preview">
+            <div id="num-loading" class="spinner" style="display:none;"></div>
+            <img id="num-preview" src="" style="display:none;" onload="this.style.display='block'; document.getElementById('num-loading').style.display='none';" />
+          </div>
+        </div>
+        
+        <!-- KONTROL KANAN -->
+        <div class="control-section">
+          <label class="radio-item selected" style="margin-bottom:10px;"><input type="radio" name="pos" value="bottom" checked><div class="radio-box"><div class="radio-title">Bawah Tengah</div></div></label>
+          <label class="radio-item" style="margin-bottom:20px;"><input type="radio" name="pos" value="bottom-right"><div class="radio-box"><div class="radio-title">Bawah Kanan</div></div></label>
+          <button id="btn-do-num" class="btn-primary block">Terapkan & Unduh</button>
+          <div id="loading-num" class="loading" style="display:none;"><div class="spinner"></div> Memproses...</div>
+          <div id="result-num" class="result" style="display:none; margin-top: 20px;"><h3>Berhasil!</h3><a id="btn-download-num" href="#" class="btn-primary block success">Unduh PDF</a></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROTECT PAGE -->
+    <section id="page-protect" class="page">
+      <button class="btn-back" onclick="navTo('home')">← Kembali</button>
+      <div style="text-align: center; margin-bottom: 20px;"><h2>Kunci PDF</h2><p class="desc">Lindungi PDF dengan kata sandi.</p></div>
+      
+      <div id="view-upload-prot" class="simple-box"><input type="file" id="file-prot" accept=".pdf" hidden /><button class="btn-primary" id="btn-trigger-prot">Pilih File PDF</button></div>
+      
+      <div id="view-work-prot" class="layout" style="display:none;">
+        <!-- PREVIEW KIRI -->
+        <div class="file-card">
+          <div class="file-header"><span id="prot-filename">Memuat...</span></div>
+          <div class="file-preview">
+            <div id="prot-loading" class="spinner" style="display:none;"></div>
+            <img id="prot-preview" src="" style="display:none;" onload="this.style.display='block'; document.getElementById('prot-loading').style.display='none';" />
+          </div>
+        </div>
+        
+        <!-- KONTROL KANAN -->
+        <div class="control-section">
+          <h2 style="font-size:1rem; margin-bottom:10px;">Buat Password</h2>
+          <input type="password" id="prot-pass" class="text-input" placeholder="Ketik kata sandi..." style="width:100%; padding:12px; border-radius:8px; border:1px solid var(--border); background:var(--bg); color:white; margin-bottom:15px;">
+          <button id="btn-do-prot" class="btn-primary block">Kunci & Unduh</button>
+          <div id="loading-prot" class="loading" style="display:none;"><div class="spinner"></div> Memproses...</div>
+          <div id="result-prot" class="result" style="display:none; margin-top: 20px;"><h3>Berhasil Dikunci!</h3><a id="btn-download-prot" href="#" class="btn-primary block success">Unduh PDF</a></div>
+        </div>
+      </div>
+    </section>
+
+  
+    <!-- SPLIT PAGE -->
+    <section id="page-split" class="page">
+      <button class="btn-back" onclick="navTo('home')">← Kembali</button>
+      <div style="text-align: center; margin-bottom: 20px;"><h2>Pisahkan PDF</h2><p class="desc">Ambil satu halaman tertentu menjadi PDF baru.</p></div>
+      <div id="view-upload-split" class="simple-box"><input type="file" id="file-split" accept=".pdf" hidden /><button class="btn-primary" id="btn-trigger-split">Pilih File PDF</button></div>
+      
+      <div id="view-work-split" class="layout" style="display:none;">
+        <div class="file-card">
+          <div class="file-header"><span id="split-filename">Memuat...</span></div>
+          <div class="file-preview"><div id="split-loading" class="spinner" style="display:none;"></div><img id="split-preview" src="" style="display:none;" onload="this.style.display='block'; document.getElementById('split-loading').style.display='none';" /></div>
+        </div>
+        <div class="control-section">
+          <label style="font-size:0.9rem; margin-bottom:10px; display:block;">Halaman yang ingin diambil:</label>
+          <input type="number" id="split-page" class="text-input" value="1" min="1" style="width:100%; padding:12px; border-radius:8px; border:1px solid var(--border); background:var(--bg); color:white; margin-bottom:15px;">
+          <button id="btn-do-split" class="btn-primary block">Pisahkan & Unduh</button>
+          <div id="loading-split" class="loading" style="display:none;"><div class="spinner"></div> Memproses...</div>
+          <div id="result-split" class="result" style="display:none; margin-top: 20px;"><h3>Berhasil!</h3><a id="btn-download-split" href="#" class="btn-primary block success">Unduh PDF</a></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- UNLOCK PAGE -->
+    <section id="page-unlock" class="page">
+      <button class="btn-back" onclick="navTo('home')">← Kembali</button>
+      <div style="text-align: center; margin-bottom: 20px;"><h2>Buka Kunci PDF</h2><p class="desc">Hapus password dari dokumen Anda.</p></div>
+      <div id="view-upload-unlock" class="simple-box"><input type="file" id="file-unlock" accept=".pdf" hidden /><button class="btn-primary" id="btn-trigger-unlock">Pilih File PDF</button></div>
+      
+      <div id="view-work-unlock" class="layout" style="display:none;">
+        <div class="file-card">
+          <div class="file-header"><span id="unlock-filename">Memuat...</span></div>
+          <div class="file-preview"><div id="unlock-loading" class="spinner" style="display:none;"></div><img id="unlock-preview" src="" style="display:none;" onload="this.style.display='block'; document.getElementById('unlock-loading').style.display='none';" /></div>
+        </div>
+        <div class="control-section">
+          <label style="font-size:0.9rem; margin-bottom:10px; display:block;">Masukkan Password PDF:</label>
+          <input type="password" id="unlock-pass" class="text-input" placeholder="Ketik password..." style="width:100%; padding:12px; border-radius:8px; border:1px solid var(--border); background:var(--bg); color:white; margin-bottom:15px;">
+          <button id="btn-do-unlock" class="btn-primary block">Buka Kunci & Unduh</button>
+          <div id="loading-unlock" class="loading" style="display:none;"><div class="spinner"></div> Memproses...</div>
+          <div id="result-unlock" class="result" style="display:none; margin-top: 20px;"><h3>Berhasil Dibuka!</h3><a id="btn-download-unlock" href="#" class="btn-primary block success">Unduh PDF</a></div>
+        </div>
+      </div>
+    </section>
+
   </main>
 
   <!-- MODAL WATERMARK -->

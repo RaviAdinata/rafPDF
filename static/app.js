@@ -273,3 +273,259 @@ document.getElementById("btn-do-delete").addEventListener("click", async () => {
     showToast("Halaman berhasil dihapus!");
   } catch(e) { showToast("Gagal menghapus halaman!", true); }
 });
+
+// ==========================================
+// 5. FITUR NOMOR HALAMAN
+// ==========================================
+const fileNum = document.getElementById("file-num");
+document.getElementById("btn-trigger-num").addEventListener("click", () => fileNum.click());
+let numJobId = null;
+
+fileNum.addEventListener("change", async () => {
+  if(fileNum.files.length === 0) return;
+  document.getElementById("view-upload-num").style.display = "none";
+  document.getElementById("view-work-num").style.display = "grid";
+  document.getElementById("num-filename").textContent = "Memproses: " + fileNum.files[0].name;
+  document.getElementById("num-preview").style.display = "none";
+  document.getElementById("num-loading").style.display = "block";
+  
+  const fd = new FormData(); fd.append("file", fileNum.files[0]);
+  const res = await fetch("/upload", { method: "POST", body: fd });
+  const data = await res.json();
+  numJobId = data.job_id;
+  
+  document.getElementById("num-filename").textContent = fileNum.files[0].name;
+  document.getElementById("num-preview").src = `/outputs/${numJobId}_original.png`;
+});
+
+document.querySelectorAll('#page-numbers .radio-item').forEach(item => {
+  item.addEventListener("click", () => {
+    document.querySelectorAll('#page-numbers .radio-item').forEach(i => i.classList.remove("selected"));
+    item.classList.add("selected"); item.querySelector("input").checked = true;
+  });
+});
+
+document.getElementById("btn-do-num").addEventListener("click", async () => {
+  document.getElementById("btn-do-num").style.display = "none";
+  document.getElementById("loading-num").style.display = "flex";
+  const pos = document.querySelector('#page-numbers input[name="pos"]:checked').value;
+  const fd = new FormData(); fd.append("job_id", numJobId); fd.append("position", pos);
+  
+  const res = await fetch("/add-numbers", { method: "POST", body: fd });
+  const data = await res.json();
+  document.getElementById("loading-num").style.display = "none";
+  document.getElementById("result-num").style.display = "block";
+  document.getElementById("btn-download-num").href = `/download/${data.job_id}`;
+  showToast("Nomor halaman ditambahkan!");
+});
+
+// ==========================================
+// 6. FITUR KUNCI PDF (PROTECT)
+// ==========================================
+const fileProt = document.getElementById("file-prot");
+document.getElementById("btn-trigger-prot").addEventListener("click", () => fileProt.click());
+let protJobId = null;
+
+fileProt.addEventListener("change", async () => {
+  if(fileProt.files.length === 0) return;
+  document.getElementById("view-upload-prot").style.display = "none";
+  document.getElementById("view-work-prot").style.display = "grid";
+  document.getElementById("prot-filename").textContent = "Memproses: " + fileProt.files[0].name;
+  document.getElementById("prot-preview").style.display = "none";
+  document.getElementById("prot-loading").style.display = "block";
+  
+  const fd = new FormData(); fd.append("file", fileProt.files[0]);
+  const res = await fetch("/upload", { method: "POST", body: fd });
+  const data = await res.json();
+  protJobId = data.job_id;
+  
+  document.getElementById("prot-filename").textContent = fileProt.files[0].name;
+  document.getElementById("prot-preview").src = `/outputs/${protJobId}_original.png`;
+});
+
+document.getElementById("btn-do-prot").addEventListener("click", async () => {
+  const pass = document.getElementById("prot-pass").value;
+  if(!pass) return showToast("Password tidak boleh kosong!", true);
+  
+  document.getElementById("btn-do-prot").style.display = "none";
+  document.getElementById("loading-prot").style.display = "flex";
+  const fd = new FormData(); fd.append("job_id", protJobId); fd.append("password", pass);
+  
+  const res = await fetch("/protect", { method: "POST", body: fd });
+  const data = await res.json();
+  document.getElementById("loading-prot").style.display = "none";
+  document.getElementById("result-prot").style.display = "block";
+  document.getElementById("btn-download-prot").href = `/download/${data.job_id}`;
+  showToast("PDF berhasil dikunci!");
+});
+
+// ==========================================
+// 7. DRAG & DROP GLOBAL (Untuk semua halaman)
+// ==========================================
+const dropZones = [
+  { zone: 'view-upload-merge', input: 'files-merge' },
+  { zone: 'view-upload-jpg', input: 'files-jpg' },
+  { zone: 'view-upload-delete', input: 'file-delete' },
+  { zone: 'view-upload-num', input: 'file-num' },
+  { zone: 'view-upload-prot', input: 'file-prot' }
+];
+
+dropZones.forEach(({ zone, input }) => {
+  const el = document.getElementById(zone);
+  const inputEl = document.getElementById(input);
+  if (!el || !inputEl) return;
+
+  el.addEventListener("dragover", e => {
+    e.preventDefault();
+    el.style.borderColor = "var(--primary)";
+    el.style.background = "rgba(59,130,246,0.05)";
+  });
+
+  el.addEventListener("dragleave", e => {
+    e.preventDefault();
+    el.style.borderColor = "var(--border)";
+    el.style.background = "var(--surface)";
+  });
+
+  el.addEventListener("drop", e => {
+    e.preventDefault();
+    el.style.borderColor = "var(--border)";
+    el.style.background = "var(--surface)";
+    
+    if (e.dataTransfer.files.length > 0) {
+      // Trik: Timpa file input dengan file yang di-drop
+      inputEl.files = e.dataTransfer.files;
+      // Picu event 'change' agar fungsi upload berjalan
+      inputEl.dispatchEvent(new Event('change'));
+    }
+  });
+});
+
+// ==========================================
+// 8. FITUR SPLIT PDF
+// ==========================================
+const fileSplit = document.getElementById("file-split");
+document.getElementById("btn-trigger-split").addEventListener("click", () => fileSplit.click());
+let splitJobId = null;
+
+fileSplit.addEventListener("change", async () => {
+  if(fileSplit.files.length === 0) return;
+  document.getElementById("view-upload-split").style.display = "none";
+  document.getElementById("view-work-split").style.display = "grid";
+  document.getElementById("split-filename").textContent = "Memproses: " + fileSplit.files[0].name;
+  document.getElementById("split-preview").style.display = "none";
+  document.getElementById("split-loading").style.display = "block";
+  
+  const fd = new FormData(); fd.append("file", fileSplit.files[0]);
+  const res = await fetch("/upload", { method: "POST", body: fd });
+  const data = await res.json();
+  splitJobId = data.job_id;
+  
+  document.getElementById("split-filename").textContent = fileSplit.files[0].name;
+  document.getElementById("split-preview").src = `/outputs/${splitJobId}_original.png`;
+});
+
+document.getElementById("btn-do-split").addEventListener("click", async () => {
+  const pageNum = document.getElementById("split-page").value;
+  if(!pageNum || pageNum < 1) return showToast("Nomor halaman tidak valid!", true);
+  
+  document.getElementById("btn-do-split").style.display = "none";
+  document.getElementById("loading-split").style.display = "flex";
+  const fd = new FormData(); fd.append("job_id", splitJobId); fd.append("page_num", pageNum);
+  
+  const res = await fetch("/split", { method: "POST", body: fd });
+  const data = await res.json();
+  document.getElementById("loading-split").style.display = "none";
+  
+  if (data.error) {
+    showToast(data.error, true);
+    document.getElementById("btn-do-split").style.display = "block";
+    return;
+  }
+  
+  document.getElementById("result-split").style.display = "block";
+  document.getElementById("btn-download-split").href = `/download/${data.job_id}`;
+  showToast("Halaman berhasil dipisahkan!");
+});
+
+// ==========================================
+// 9. FITUR UNLOCK PDF
+// ==========================================
+const fileUnlock = document.getElementById("file-unlock");
+document.getElementById("btn-trigger-unlock").addEventListener("click", () => fileUnlock.click());
+let unlockJobId = null;
+
+fileUnlock.addEventListener("change", async () => {
+  if(fileUnlock.files.length === 0) return;
+  document.getElementById("view-upload-unlock").style.display = "none";
+  document.getElementById("view-work-unlock").style.display = "grid";
+  document.getElementById("unlock-filename").textContent = "Memproses: " + fileUnlock.files[0].name;
+  document.getElementById("unlock-preview").style.display = "none";
+  document.getElementById("unlock-loading").style.display = "block";
+  
+  const fd = new FormData(); fd.append("file", fileUnlock.files[0]);
+  const res = await fetch("/upload", { method: "POST", body: fd });
+  const data = await res.json();
+  unlockJobId = data.job_id;
+  
+  document.getElementById("unlock-filename").textContent = fileUnlock.files[0].name;
+  document.getElementById("unlock-preview").src = `/outputs/${unlockJobId}_original.png`;
+});
+
+document.getElementById("btn-do-unlock").addEventListener("click", async () => {
+  const pass = document.getElementById("unlock-pass").value;
+  if(!pass) return showToast("Password harus diisi!", true);
+  
+  document.getElementById("btn-do-unlock").style.display = "none";
+  document.getElementById("loading-unlock").style.display = "flex";
+  const fd = new FormData(); fd.append("job_id", unlockJobId); fd.append("password", pass);
+  
+  const res = await fetch("/unlock", { method: "POST", body: fd });
+  const data = await res.json();
+  document.getElementById("loading-unlock").style.display = "none";
+  
+  if (data.error) {
+    showToast(data.error, true);
+    document.getElementById("btn-do-unlock").style.display = "block";
+    return;
+  }
+  
+  document.getElementById("result-unlock").style.display = "block";
+  document.getElementById("btn-download-unlock").href = `/download/${data.job_id}`;
+  showToast("Kunci PDF berhasil dibuka!");
+});
+
+// ==========================================
+// 10. FITUR PENCARIAN ALAT (SEARCH)
+// ==========================================
+const searchInput = document.getElementById("search-tools");
+if (searchInput) {
+  searchInput.addEventListener("input", (e) => {
+    const query = e.target.value.toLowerCase();
+    const cards = document.querySelectorAll(".tool-card");
+    
+    cards.forEach(card => {
+      const title = card.querySelector("h3").textContent.toLowerCase();
+      const desc = card.querySelector("p").textContent.toLowerCase();
+      
+      if (title.includes(query) || desc.includes(query)) {
+        card.style.display = "block";
+      } else {
+        card.style.display = "none";
+      }
+    });
+  });
+}
+
+// ==========================================
+// 11. EFEK PREMIUM: SPOTLIGHT KURSOR PADA KARTU
+// ==========================================
+document.querySelectorAll('.tool-card').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    card.style.setProperty('--mouse-x', `${x}px`);
+    card.style.setProperty('--mouse-y', `${y}px`);
+  });
+});

@@ -1,4 +1,4 @@
-import os, uuid, shutil, json, time, threading
+import os, uuid, shutil, json, time, threading, time, threading
 from typing import List
 from fastapi import FastAPI, UploadFile, File, Form, Request
 from fastapi.responses import HTMLResponse, FileResponse, JSONResponse
@@ -10,6 +10,28 @@ app = FastAPI()
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 UP_DIR, OUT_DIR = os.path.join(BASE_DIR, "uploads"), os.path.join(BASE_DIR, "outputs")
 os.makedirs(UP_DIR, exist_ok=True); os.makedirs(OUT_DIR, exist_ok=True)
+
+def cleanup_old_files():
+    """Menghapus file yang lebih tua dari 1 jam."""
+    now = time.time()
+    for folder in [UP_DIR, OUT_DIR]:
+        if not os.path.exists(folder): continue
+        for f in os.listdir(folder):
+            fpath = os.path.join(folder, f)
+            # Abaikan file .gitkeep
+            if os.path.isfile(fpath) and not f.endswith(".gitkeep"):
+                if os.stat(fpath).st_mtime < now - 3600: # 3600 detik = 1 jam
+                    try: os.remove(fpath)
+                    except: pass
+
+def run_cleanup_bg():
+    while True:
+        cleanup_old_files()
+        time.sleep(1800) # Cek setiap 30 menit
+
+@app.on_event("startup")
+def startup_event():
+    threading.Thread(target=run_cleanup_bg, daemon=True).start()
 
 def cleanup_old_files():
     """Menghapus file yang lebih tua dari 1 jam."""
@@ -113,6 +135,42 @@ async def convert_images(job_id: str = Form(...), order_json: str = Form(...)):
     out_path = os.path.join(OUT_DIR, f"{job_id}_result.pdf")
     images_to_pdf(file_paths, out_path)
     return JSONResponse({"job_id": job_id})
+
+
+# --- TAMBAH NOMOR HALAMAN ---
+@app.post("/add-numbers")
+async def add_numbers(job_id: str = Form(...), position: str = Form("bottom")):
+    in_path, out_path = os.path.join(UP_DIR, f"{job_id}.pdf"), os.path.join(OUT_DIR, f"{job_id}_result.pdf")
+    add_page_numbers(in_path, out_path, position)
+    return JSONResponse({"job_id": job_id})
+
+# --- PROTEKSI PASSWORD ---
+@app.post("/protect")
+async def protect(job_id: str = Form(...), password: str = Form(...)):
+    in_path, out_path = os.path.join(UP_DIR, f"{job_id}.pdf"), os.path.join(OUT_DIR, f"{job_id}_result.pdf")
+    protect_pdf(in_path, out_path, password)
+    return JSONResponse({"job_id": job_id})
+
+
+# --- SPLIT PDF ---
+@app.post("/split")
+async def split(job_id: str = Form(...), page_num: int = Form(...)):
+    in_path, out_path = os.path.join(UP_DIR, f"{job_id}.pdf"), os.path.join(OUT_DIR, f"{job_id}_result.pdf")
+    try:
+        split_pdf(in_path, out_path, page_num - 1) # user input 1-based, code 0-based
+        return JSONResponse({"job_id": job_id})
+    except ValueError as e:
+        return JSONResponse({"error": str(e)}, status_code=400)
+
+# --- UNLOCK PDF ---
+@app.post("/unlock")
+async def unlock(job_id: str = Form(...), password: str = Form(...)):
+    in_path, out_path = os.path.join(UP_DIR, f"{job_id}.pdf"), os.path.join(OUT_DIR, f"{job_id}_result.pdf")
+    try:
+        unlock_pdf(in_path, out_path, password)
+        return JSONResponse({"job_id": job_id})
+    except ValueError as e:
+        return JSONResponse({"error": str(e)}, status_code=400)
 
 # --- ENDPOINT LAINNYA ---
 @app.post("/quick-action")

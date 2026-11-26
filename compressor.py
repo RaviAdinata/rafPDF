@@ -56,12 +56,62 @@ def images_to_pdf(image_paths: list[str], output_path: str) -> None:
         images.append(img)
     if images: images[0].save(output_path, "PDF", resolution=100.0, save_all=True, append_images=images[1:])
 
-def generate_preview(pdf_path: str, output_img_path: str) -> None:
-    doc = pymupdf.open(pdf_path)
-    if len(doc) > 0:
-        pix = doc[0].get_pixmap(matrix=pymupdf.Matrix(1.0, 1.0))
-        pix.save(output_img_path)
+
+def add_page_numbers(input_path: str, output_path: str, position: str = "bottom") -> None:
+    doc = pymupdf.open(input_path)
+    for i, page in enumerate(doc):
+        text = f"{i + 1}"
+        rect = page.rect
+        fontsize = 12
+        
+        # Gunakan insert_textbox untuk rata tengah
+        if position == "bottom":
+            text_rect = pymupdf.Rect(rect.width/2 - 50, rect.height - 25, rect.width/2 + 50, rect.height - 10)
+            page.insert_textbox(text_rect, text, fontsize=fontsize, align=1, color=(0, 0, 0))
+        elif position == "bottom-right":
+            text_rect = pymupdf.Rect(rect.width - 60, rect.height - 25, rect.width - 10, rect.height - 10)
+            page.insert_textbox(text_rect, text, fontsize=fontsize, align=2, color=(0, 0, 0))
+    doc.save(output_path)
     doc.close()
+
+def protect_pdf(input_path: str, output_path: str, password: str) -> None:
+    with pikepdf.open(input_path) as pdf:
+        # Enkripsi PDF dengan password
+        pdf.save(output_path, encryption=pikepdf.Encryption(owner=password, user=password, R=6))
+
+
+def unlock_pdf(input_path: str, output_path: str, password: str) -> None:
+    try:
+        with pikepdf.open(input_path, password=password) as pdf:
+            pdf.save(output_path) # Simpan tanpa enkripsi
+    except pikepdf.PasswordError:
+        raise ValueError("Password salah! Tidak dapat membuka dokumen.")
+
+def split_pdf(input_path: str, output_path: str, page_num: int) -> None:
+    check_encryption(input_path)
+    with pikepdf.open(input_path) as pdf:
+        new_pdf = pikepdf.Pdf.new()
+        # page_num adalah index (0, 1, 2), jadi kurangi 1 dari input user
+        if page_num < 0 or page_num >= len(pdf.pages):
+            raise ValueError("Nomor halaman tidak valid.")
+        new_pdf.pages.append(pdf.pages[page_num])
+        new_pdf.save(output_path)
+
+def generate_preview(pdf_path: str, output_img_path: str) -> None:
+    try:
+        doc = pymupdf.open(pdf_path)
+        if len(doc) > 0:
+            pix = doc[0].get_pixmap(matrix=pymupdf.Matrix(1.0, 1.0))
+            pix.save(output_img_path)
+        doc.close()
+    except Exception as e:
+        print(f"Gagal buat preview (mungkin PDF terkunci): {e}")
+        # Buat gambar placeholder jika PDF terkunci
+        from PIL import Image, ImageDraw
+        img = Image.new('RGB', (400, 500), color='#181b21')
+        d = ImageDraw.Draw(img)
+        d.text((150, 250), "PDF Terkunci", fill="white")
+        img.save(output_img_path)
 
 # --- FUNGSI BARU: HAPUS HALAMAN ---
 def delete_pdf_pages(input_path: str, output_path: str, pages_to_keep: list[int]) -> None:
